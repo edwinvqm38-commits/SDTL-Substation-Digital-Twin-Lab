@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SDTL interactive engineering model viewer" />
+    <title>SDTL 3D Viewer</title>
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <header class="app-bar">
+        <div class="brand-block">
+          <strong>SDTL</strong>
+          <span>Substation Digital Twin Lab</span>
+        </div>
+        <div class="project-block">
+          <span class="project-name">SE Demo 220 kV</span>
+          <span id="viewer-status" class="status" aria-live="polite">Inicializando</span>
+        </div>
+        <div class="app-actions">
+          <button id="reset-camera" type="button">Restablecer vista</button>
+          <label class="file-action">
+            Abrir modelo
+            <input id="model-file" type="file" accept=".gltf,.glb,model/gltf+json,model/gltf-binary" />
+          </label>
+        </div>
+      </header>
+
+      <main class="viewer-layout">
+        <aside class="tree-region" aria-label="Jerarquia del modelo">
+          <div class="region-heading">
+            <h1>Modelo</h1>
+            <span id="object-count">0 objetos</span>
+          </div>
+          <div id="tree-view" class="tree-view"></div>
+        </aside>
+
+        <section class="viewport-region" aria-label="Vista tridimensional">
+          <canvas id="render-canvas" tabindex="0"></canvas>
+          <div id="loading-state" class="loading-state">Cargando modelo</div>
+        </section>
+
+        <aside class="inspector-region" aria-label="Propiedades del objeto">
+          <div class="region-heading">
+            <h2>Propiedades</h2>
+            <span id="selection-type">Sin seleccion</span>
+          </div>
+          <div id="metadata-panel" class="metadata-panel"></div>
+        </aside>
+      </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

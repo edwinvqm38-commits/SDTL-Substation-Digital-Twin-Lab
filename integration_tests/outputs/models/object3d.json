@@ -1,0 +1,13 @@
+{
+    "id": "3D-ROOM-TEST-001",
+    "type": "ElectricalRoom",
+    "components": [
+        "Floor",
+        "Wall_1",
+        "Wall_2",
+        "Wall_3",
+        "Wall_4",
+        "Roof"
+    ],
+    "source": "CIV-ROOM-TEST-001"
+}

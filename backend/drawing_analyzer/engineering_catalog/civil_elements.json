@@ -1,0 +1,52 @@
+{
+  "catalog": "civil_elements",
+  "version": "1.0",
+  "elements": [
+    {
+      "code": "ELECTRICAL_ROOM",
+      "type": "electrical_room",
+      "rules": {
+        "geometry": "closed_rectangle",
+        "text_patterns": ["SALA", "CONTROL", "ELECTRICA", "CELDA"]
+      }
+    },
+    {
+      "code": "CABLE_TRENCH",
+      "type": "cable_trench",
+      "rules": {
+        "geometry": "long_rectangle",
+        "aspect_ratio_min": 5,
+        "width_range": [0.3, 2.0],
+        "text_patterns": ["CANAL", "CABLE", "DUCTO"]
+      }
+    },
+    {
+      "code": "FOUNDATION",
+      "type": "foundation",
+      "rules": {
+        "geometry": "rectangle",
+        "closed": true,
+        "dimension_required": true,
+        "text_patterns": ["BASE", "FUNDACION", "CIMIENTO"]
+      }
+    },
+    {
+      "code": "FENCE",
+      "type": "fence",
+      "rules": {
+        "geometry": "long_open_polyline",
+        "aspect_ratio_min": 5,
+        "text_patterns": ["CERCO", "PERIMETRO"]
+      }
+    },
+    {
+      "code": "ROAD",
+      "type": "road",
+      "rules": {
+        "geometry": "large_polygon",
+        "area_min": 20,
+        "text_patterns": ["VIA", "CAMINO", "CARRETERA"]
+      }
+    }
+  ]
+}

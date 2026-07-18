@@ -1,0 +1,36 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+
+# CAD / engineering files
+*.dwg
+*.dxf
+*.pdf
+
+# Generated reports
+cad_report.json
+layer_analysis.json
+semantic_mapping.json
+geometry_report.json
+pipeline_output.json
+
+# Temporary
+*.tmp
+*.log
+
+# Test cache
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Vite
+.vite/

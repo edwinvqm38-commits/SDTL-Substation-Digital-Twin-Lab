@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "scene": {
+    "background": "#E8EDF1FF",
+    "gridMinor": "#C9D2D8A6",
+    "gridMajor": "#93A4AFFF",
+    "axisX": "#C43C3C",
+    "axisY": "#2E8B57",
+    "axisZ": "#3973B8",
+    "selection": "#E0B82E"
+  },
+  "materials": {
+    "concrete": {
+      "label": "Concreto",
+      "color": "#808080"
+    },
+    "steel": {
+      "label": "Acero",
+      "color": "#71797E"
+    },
+    "soil": {
+      "label": "Suelo",
+      "color": "#70543E"
+    }
+  },
+  "objectTypes": {
+    "ElectricalRoom": {
+      "label": "Sala electrica",
+      "category": "Obras civiles",
+      "material": "concrete"
+    },
+    "CableTrench": {
+      "label": "Canaleta de cables",
+      "category": "Canaletas",
+      "material": "concrete"
+    },
+    "Foundation": {
+      "label": "Fundacion",
+      "category": "Fundaciones",
+      "material": "concrete"
+    }
+  }
+}

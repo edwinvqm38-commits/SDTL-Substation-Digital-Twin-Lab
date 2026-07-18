@@ -1,0 +1,865 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "SDTL v1.9.5"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "3D-CIV-ROOM-001",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "3D-CIV-ROOM-001",
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extras": {
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete"
+        }
+      }
+    },
+    {
+      "name": "Floor",
+      "mesh": 0,
+      "translation": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extras": {
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-FLOOR",
+          "component_name": "Floor",
+          "mesh_id": "MESH-CIV-ROOM-001-FLOOR"
+        }
+      }
+    },
+    {
+      "name": "Wall_1",
+      "mesh": 1,
+      "translation": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extras": {
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_1",
+          "component_name": "Wall_1",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_1"
+        }
+      }
+    },
+    {
+      "name": "Wall_2",
+      "mesh": 2,
+      "translation": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extras": {
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_2",
+          "component_name": "Wall_2",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_2"
+        }
+      }
+    },
+    {
+      "name": "Wall_3",
+      "mesh": 3,
+      "translation": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extras": {
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_3",
+          "component_name": "Wall_3",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_3"
+        }
+      }
+    },
+    {
+      "name": "Wall_4",
+      "mesh": 4,
+      "translation": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extras": {
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_4",
+          "component_name": "Wall_4",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_4"
+        }
+      }
+    },
+    {
+      "name": "Roof",
+      "mesh": 5,
+      "translation": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extras": {
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-ROOF",
+          "component_name": "Roof",
+          "mesh_id": "MESH-CIV-ROOM-001-ROOF"
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "MESH-CIV-ROOM-001-FLOOR",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1
+          },
+          "indices": 2,
+          "mode": 4,
+          "material": 0
+        }
+      ],
+      "extras": {
+        "component_role": "Floor",
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-FLOOR",
+          "component_name": "Floor",
+          "mesh_id": "MESH-CIV-ROOM-001-FLOOR"
+        }
+      }
+    },
+    {
+      "name": "MESH-CIV-ROOM-001-WALL_1",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 3,
+            "NORMAL": 4
+          },
+          "indices": 5,
+          "mode": 4,
+          "material": 0
+        }
+      ],
+      "extras": {
+        "component_role": "Wall_1",
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_1",
+          "component_name": "Wall_1",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_1"
+        }
+      }
+    },
+    {
+      "name": "MESH-CIV-ROOM-001-WALL_2",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 6,
+            "NORMAL": 7
+          },
+          "indices": 8,
+          "mode": 4,
+          "material": 0
+        }
+      ],
+      "extras": {
+        "component_role": "Wall_2",
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_2",
+          "component_name": "Wall_2",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_2"
+        }
+      }
+    },
+    {
+      "name": "MESH-CIV-ROOM-001-WALL_3",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 9,
+            "NORMAL": 10
+          },
+          "indices": 11,
+          "mode": 4,
+          "material": 0
+        }
+      ],
+      "extras": {
+        "component_role": "Wall_3",
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_3",
+          "component_name": "Wall_3",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_3"
+        }
+      }
+    },
+    {
+      "name": "MESH-CIV-ROOM-001-WALL_4",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 12,
+            "NORMAL": 13
+          },
+          "indices": 14,
+          "mode": 4,
+          "material": 0
+        }
+      ],
+      "extras": {
+        "component_role": "Wall_4",
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-WALL_4",
+          "component_name": "Wall_4",
+          "mesh_id": "MESH-CIV-ROOM-001-WALL_4"
+        }
+      }
+    },
+    {
+      "name": "MESH-CIV-ROOM-001-ROOF",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 15,
+            "NORMAL": 16
+          },
+          "indices": 17,
+          "mode": 4,
+          "material": 0
+        }
+      ],
+      "extras": {
+        "component_role": "Roof",
+        "metadata": {
+          "sdtl_id": "CIV-ROOM-001",
+          "source_pdf": "SE-PI-PL-OC-700.pdf",
+          "page": 2,
+          "source_geometry": "GEO-ROOM-001",
+          "object_type": "ElectricalRoom",
+          "state": "approved",
+          "confidence": 0.93,
+          "dimensions": {
+            "length": 12.0,
+            "width": 8.0,
+            "height": 4.0
+          },
+          "material": "Concrete",
+          "component_id": "CMP-CIV-ROOM-001-ROOF",
+          "component_name": "Roof",
+          "mesh_id": "MESH-CIV-ROOM-001-ROOF"
+        }
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "Concrete",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.5019607843137255,
+          0.5019607843137255,
+          0.5019607843137255,
+          1.0
+        ],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 1.0
+      },
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "density": 2400.0,
+        "metadata": {
+          "density_unit": "kg/m3"
+        }
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 648,
+      "uri": "data:application/octet-stream;base64,AAAAAAAAAAAAAACAAABAQQAAAAAAAACAAABAQQAAAAAAAADBAAAAAAAAAAAAAADBAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAABAAIAAAACAAMAAAAAAAAAAAAAAACAAABAQQAAAAAAAACAAABAQQAAgEAAAACAAAAAAAAAgEAAAACAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAABAAIAAAACAAMAAABAQQAAAAAAAACAAABAQQAAAAAAAADBAABAQQAAgEAAAADBAABAQQAAgEAAAACAAACAPwAAAAAAAACAAACAPwAAAAAAAACAAACAPwAAAAAAAACAAACAPwAAAAAAAACAAAABAAIAAAACAAMAAABAQQAAAAAAAADBAAAAAAAAAAAAAADBAAAAAAAAgEAAAADBAABAQQAAgEAAAADBAAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAABAAIAAAACAAMAAAAAAAAAAAAAAADBAAAAAAAAAAAAAACAAAAAAAAAgEAAAACAAAAAAAAAgEAAAADBAACAvwAAAAAAAACAAACAvwAAAAAAAACAAACAvwAAAAAAAACAAACAvwAAAAAAAACAAAABAAIAAAACAAMAAAAAAAAAgEAAAACAAABAQQAAgEAAAACAAABAQQAAgEAAAADBAAAAAAAAgEAAAADBAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAABAAIAAAACAAMA"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 48,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 96,
+      "byteLength": 12,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 108,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 156,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 204,
+      "byteLength": 12,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 216,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 264,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 312,
+      "byteLength": 12,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 324,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 372,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 420,
+      "byteLength": 12,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 432,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 480,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 528,
+      "byteLength": 12,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 540,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 588,
+      "byteLength": 48,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 636,
+      "byteLength": 12,
+      "target": 34963
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3",
+      "min": [
+        0.0,
+        0.0,
+        -8.0
+      ],
+      "max": [
+        12.0,
+        0.0,
+        -0.0
+      ]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3",
+      "min": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "max": [
+        12.0,
+        4.0,
+        -0.0
+      ]
+    },
+    {
+      "bufferView": 4,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 5,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 6,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3",
+      "min": [
+        12.0,
+        0.0,
+        -8.0
+      ],
+      "max": [
+        12.0,
+        4.0,
+        -0.0
+      ]
+    },
+    {
+      "bufferView": 7,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 9,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3",
+      "min": [
+        0.0,
+        0.0,
+        -8.0
+      ],
+      "max": [
+        12.0,
+        4.0,
+        -8.0
+      ]
+    },
+    {
+      "bufferView": 10,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 11,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 12,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3",
+      "min": [
+        0.0,
+        0.0,
+        -8.0
+      ],
+      "max": [
+        0.0,
+        4.0,
+        -0.0
+      ]
+    },
+    {
+      "bufferView": 13,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 14,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 15,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3",
+      "min": [
+        0.0,
+        4.0,
+        -8.0
+      ],
+      "max": [
+        12.0,
+        4.0,
+        -0.0
+      ]
+    },
+    {
+      "bufferView": 16,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 17,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6,
+      "type": "SCALAR"
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "sdtl_id": "CIV-ROOM-001",
+      "source_pdf": "SE-PI-PL-OC-700.pdf",
+      "page": 2,
+      "source_geometry": "GEO-ROOM-001",
+      "object_type": "ElectricalRoom",
+      "state": "approved",
+      "confidence": 0.93,
+      "dimensions": {
+        "length": 12.0,
+        "width": 8.0,
+        "height": 4.0
+      },
+      "material": "Concrete"
+    },
+    "source_sdtl_object": "CIV-ROOM-001",
+    "object_type": "ElectricalRoom",
+    "traceability": {
+      "source_geometry": "GEO-ROOM-001",
+      "source_pdf": "SE-PI-PL-OC-700.pdf",
+      "page": 2
+    },
+    "intermediate_geometry": false,
+    "future_target": "Babylon.js"
+  }
+}

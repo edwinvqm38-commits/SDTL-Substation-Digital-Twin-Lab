@@ -1,0 +1,15 @@
+{
+  "id": "CIV-ROOM-001",
+  "type": "ElectricalRoom",
+  "state": "approved",
+  "dimensions": {
+    "length": 12,
+    "width": 8,
+    "height": 4
+  },
+  "material": "concrete",
+  "confidence": 0.93,
+  "source_geometry": "GEO-ROOM-001",
+  "source_pdf": "SE-PI-PL-OC-700.pdf",
+  "page": 2
+}

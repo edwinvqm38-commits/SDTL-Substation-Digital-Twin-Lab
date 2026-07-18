@@ -1,0 +1,102 @@
+{
+  "project": {
+    "project_id": "SE001",
+    "name": "Subestacion Demo 220kV",
+    "project_type": "substation",
+    "description": "Minimal SDTL demonstration substation",
+    "voltage_levels": [
+      {
+        "value": 220000,
+        "unit": "V",
+        "description": "Nominal voltage"
+      }
+    ],
+    "document_sets": [
+      "SET-CIVIL"
+    ],
+    "objects": [
+      "FOUND-TR01"
+    ],
+    "status": "construction"
+  },
+  "document_sets": [
+    {
+      "set_id": "SET-CIVIL",
+      "name": "Civil",
+      "discipline": "civil",
+      "description": "Civil engineering documents",
+      "documents": [
+        "OC-320_demo"
+      ]
+    }
+  ],
+  "engineering_documents": [
+    {
+      "document_id": "OC-320_demo",
+      "name": "Foundation Civil Drawing",
+      "document_type": "PDF drawing",
+      "discipline": "civil",
+      "revision": "0",
+      "status": "approved",
+      "source_file": null,
+      "pages": 1,
+      "metadata": {
+        "drawing_number": "OC-320_demo"
+      },
+      "extractions": []
+    }
+  ],
+  "objects": [
+    {
+      "id": "FOUND-TR01",
+      "object_type": "foundation",
+      "category": "civil",
+      "name": "Transformer Foundation TR01",
+      "state": "constructed",
+      "properties": {
+        "material": "concrete",
+        "dimensions": {
+          "length": 8,
+          "width": 5,
+          "height": 1
+        }
+      },
+      "relationships": [
+        {
+          "relationship_id": "REL-OC320-FOUNDTR01",
+          "source_id": "OC-320_demo",
+          "target_id": "FOUND-TR01",
+          "relationship_type": "documents",
+          "properties": {}
+        }
+      ],
+      "lifecycle_states": [
+        {
+          "state_id": "constructed",
+          "name": "Constructed",
+          "description": "Foundation construction completed"
+        }
+      ],
+      "history": [
+        {
+          "event_id": "LCE-FOUND-TR01-001",
+          "timestamp": "2026-07-17T12:00:00Z",
+          "state_from": "construction",
+          "state_to": "constructed",
+          "description": "Foundation construction accepted",
+          "responsible": "Civil Engineering Team"
+        }
+      ],
+      "spatial_position": {
+        "x": 100.0,
+        "y": 50.0,
+        "z": 0.0,
+        "coordinate_system": {
+          "reference_id": "SE001-LOCAL",
+          "system": "LOCAL",
+          "description": "SE001 local construction grid"
+        }
+      }
+    }
+  ]
+}

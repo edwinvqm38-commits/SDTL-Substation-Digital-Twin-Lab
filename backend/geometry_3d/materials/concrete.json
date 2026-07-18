@@ -1,0 +1,11 @@
+{
+  "name": "Concrete",
+  "density": 2400,
+  "visual": {
+    "color": "#808080",
+    "opacity": 1.0
+  },
+  "metadata": {
+    "density_unit": "kg/m3"
+  }
+}

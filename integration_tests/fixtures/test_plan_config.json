@@ -1,0 +1,6 @@
+{
+  "test_name": "Electrical Room Integration Test",
+  "source_pdf": "SE-PI-PL-OC-700.pdf",
+  "generate_3d": true,
+  "export_gltf": true
+}

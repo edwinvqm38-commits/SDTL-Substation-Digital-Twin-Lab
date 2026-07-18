@@ -1,0 +1,14 @@
+{
+    "id": "CAND-TEST-001",
+    "type": "ElectricalRoom",
+    "confidence": 0.93,
+    "dimensions": {
+        "length": 12,
+        "width": 8,
+        "height": 4
+    },
+    "source": {
+        "pdf": "SE-PI-PL-OC-700.pdf",
+        "page": 2
+    }
+}

@@ -1,0 +1,151 @@
+{
+  "version": "0.1",
+  "minimum_confidence": 0.8,
+  "concepts": [
+    {
+      "concept_id": "CIV-CAN-001",
+      "name": "CableTrench",
+      "discipline": "Civil",
+      "category": "CableManagement",
+      "source_layers": ["OC_CANALETA"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE"],
+      "description": "Civil trench used to route and protect power and control cables.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-DUC-001",
+      "name": "CableDuct",
+      "discipline": "Civil",
+      "category": "CableManagement",
+      "source_layers": ["OC_DUCTOS"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "CIRCLE"],
+      "description": "Underground or embedded duct route for electrical cables.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-FEN-001",
+      "name": "PerimeterFence",
+      "discipline": "Civil",
+      "category": "SiteSecurity",
+      "source_layers": ["OC_CERCO"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "INSERT"],
+      "description": "Physical perimeter fence delimiting the substation site.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-WAL-001",
+      "name": "BuildingWall",
+      "discipline": "Civil",
+      "category": "BuildingEnvelope",
+      "source_layers": ["OC_MURO_EDIF"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "SPLINE"],
+      "description": "Wall belonging to a substation building.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-DRN-001",
+      "name": "DrainageElement",
+      "discipline": "Civil",
+      "category": "Drainage",
+      "source_layers": ["OC_DRENAJE"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "CIRCLE", "HATCH", "SOLID"],
+      "description": "Civil element used to collect or convey stormwater.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-COL-001",
+      "name": "StructuralColumn",
+      "discipline": "Civil",
+      "category": "Structure",
+      "source_layers": ["OC_COLMNA"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE"],
+      "description": "Vertical structural column represented in civil drawings.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-CON-001",
+      "name": "ConcreteElement",
+      "discipline": "Civil",
+      "category": "MaterialRegion",
+      "source_layers": ["OC_CONCRETO"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "ARC", "CIRCLE", "INSERT"],
+      "description": "Region or component identified as concrete in civil drawings.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-FLR-001",
+      "name": "Floor",
+      "discipline": "Civil",
+      "category": "BuildingSurface",
+      "source_layers": ["OC_PISO"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "HATCH"],
+      "description": "Floor boundary or surface in a substation building.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-SDW-001",
+      "name": "Sidewalk",
+      "discipline": "Civil",
+      "category": "SiteAccess",
+      "source_layers": ["OC_VEREDA"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE"],
+      "description": "Pedestrian pavement or walkway within the substation site.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-CUR-001",
+      "name": "Curb",
+      "discipline": "Civil",
+      "category": "SiteAccess",
+      "source_layers": ["OC_SARDINEL"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "HATCH"],
+      "description": "Raised curb delimiting roads, sidewalks, or drainage surfaces.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-SLP-001",
+      "name": "EarthSlope",
+      "discipline": "Civil",
+      "category": "Earthworks",
+      "source_layers": ["OC_TALD"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE"],
+      "description": "Earthwork slope or embankment boundary.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-DOR-001",
+      "name": "Door",
+      "discipline": "Civil",
+      "category": "BuildingOpening",
+      "source_layers": ["OC_PUERTAS"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "ARC", "INSERT"],
+      "description": "Door or access opening in a substation building.",
+      "metadata": {"domain": "SubstationCivil"}
+    },
+    {
+      "concept_id": "CIV-WIN-001",
+      "name": "Window",
+      "discipline": "Civil",
+      "category": "BuildingOpening",
+      "source_layers": ["OC_VENTANA"],
+      "expected_geometry": ["LINE", "LWPOLYLINE", "POLYLINE", "INSERT"],
+      "description": "Window or glazed opening in a substation building.",
+      "metadata": {"domain": "SubstationCivil"}
+    }
+  ],
+  "rules": [
+    {"cad_layer": "OC_CANALETA", "concept_id": "CIV-CAN-001", "confidence": 0.95, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_DUCTOS", "concept_id": "CIV-DUC-001", "confidence": 0.95, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_CERCO", "concept_id": "CIV-FEN-001", "confidence": 0.95, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_MURO_EDIF", "concept_id": "CIV-WAL-001", "confidence": 0.9, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_DRENAJE", "concept_id": "CIV-DRN-001", "confidence": 0.9, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_COLMNA", "concept_id": "CIV-COL-001", "confidence": 0.9, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_CONCRETO", "concept_id": "CIV-CON-001", "confidence": 0.85, "notes": "Generic material layer; validate object boundaries before generation."},
+    {"cad_layer": "OC_PISO", "concept_id": "CIV-FLR-001", "confidence": 0.9, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_VEREDA", "concept_id": "CIV-SDW-001", "confidence": 0.9, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_SARDINEL", "concept_id": "CIV-CUR-001", "confidence": 0.9, "notes": "Initial engineering rule."},
+    {"cad_layer": "OC_TALD", "concept_id": "CIV-SLP-001", "confidence": 0.8, "notes": "Layer abbreviation requires engineering confirmation."},
+    {"cad_layer": "OC_PUERTAS", "concept_id": "CIV-DOR-001", "confidence": 0.9, "notes": "Expected geometry intentionally excludes fills-only evidence."},
+    {"cad_layer": "OC_VENTANA", "concept_id": "CIV-WIN-001", "confidence": 0.9, "notes": "Initial engineering rule."}
+  ]
+}

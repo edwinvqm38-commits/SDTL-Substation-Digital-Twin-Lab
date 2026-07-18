@@ -1,0 +1,26 @@
+{
+  "catalog": "sdtl_civil_objects",
+  "version": "1.0",
+  "objects": [
+    {
+      "candidate_type": "electrical_room",
+      "object_type": "ElectricalRoom"
+    },
+    {
+      "candidate_type": "cable_trench",
+      "object_type": "CableTrench"
+    },
+    {
+      "candidate_type": "foundation",
+      "object_type": "Foundation"
+    },
+    {
+      "candidate_type": "fence",
+      "object_type": "Fence"
+    },
+    {
+      "candidate_type": "road",
+      "object_type": "Road"
+    }
+  ]
+}
