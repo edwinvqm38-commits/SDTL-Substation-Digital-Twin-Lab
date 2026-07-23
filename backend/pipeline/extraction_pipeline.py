@@ -6,13 +6,16 @@ from typing import Any
 
 from backend.drawing_analyzer import (
     CandidateBuilder,
+    DimensionAssociation,
     DimensionDetector,
     DimensionGeometryAssociationEngine,
     DimensionTargetResolutionEngine,
     DimensionTopologyAnalyzer,
     EngineeringCandidate,
+    ExtractedText,
     GeometryEntity,
     GeometryFeatureExtractor,
+    OCRTextExtractor,
     PDFTextExtractor,
     SpatialAssociationEngine,
     TextGeometryRelationEngine,
@@ -71,28 +74,71 @@ class DrawingToObjectsPipeline:
         dimension_resolver: DimensionResolver | None = None,
         llm_classifier: LLMFallbackClassifier | None = None,
         scale_analyzer: ScaleAnalyzer | None = None,
+        ocr_extractor: OCRTextExtractor | None = None,
+        minimum_geometry_size: float = 3.0,
+        max_dimension_associations: int = 40,
+        text_geometry_distance_threshold: float = 20.0,
+        maximum_label_width: float = 80.0,
     ) -> None:
         self.dimension_resolver = dimension_resolver or DimensionResolver()
         self.factory = SDTLObjectFactory()
         self.validator = ObjectValidator()
         self.llm_classifier = llm_classifier or LLMFallbackClassifier()
         self.scale_analyzer = scale_analyzer or ScaleAnalyzer()
+        self.ocr_extractor = ocr_extractor or OCRTextExtractor()
+        self.minimum_geometry_size = minimum_geometry_size
+        self.max_dimension_associations = max_dimension_associations
+        self.text_geometry_distance_threshold = text_geometry_distance_threshold
+        self.maximum_label_width = maximum_label_width
 
     def run(self, pdf_path: str | Path) -> ExtractionResult:
         pdf = Path(pdf_path)
         if not pdf.exists():
             raise FileNotFoundError(pdf)
 
-        geometries = self._deduplicate_lines(
-            VectorGeometryExtractor().extract_geometry(str(pdf))
+        geometries = self._filter_negligible_geometries(
+            self._deduplicate_lines(VectorGeometryExtractor().extract_geometry(str(pdf)))
         )
         texts = PDFTextExtractor().extract_text_with_coordinates(str(pdf))
+        used_ocr = False
+        if not texts:
+            # No embedded fonts / native text at all -- common for CAD plot
+            # drivers that flatten text to vector outlines. Fall back to OCR
+            # on a raster render so labels and dimension callouts are still
+            # recoverable, instead of silently producing zero objects.
+            texts = self.ocr_extractor.extract_text(str(pdf), document_id=pdf.stem)
+            used_ocr = True
+        texts = self._filter_long_notes(texts)
         dimensions = DimensionDetector().detect_dimensions(texts)
         dimensions_by_id = {dimension.dimension_id: dimension for dimension in dimensions}
 
-        spatial_relations = SpatialAssociationEngine().associate(texts, geometries)
-        dimension_associations = DimensionGeometryAssociationEngine().associate(
-            dimensions, geometries, spatial_relations
+        # The only consumer of these spatial_relations below is
+        # DimensionGeometryAssociationEngine, which only ever looks up a
+        # relation by (dimension.text_source_id, geometry_id) -- so only the
+        # handful of texts that actually produced a dimension are relevant
+        # here. That matters a lot on a real sheet: a long note/title line's
+        # bounding box (hundreds of points wide) "intersects" huge numbers of
+        # geometries regardless of any distance_threshold (that only gates
+        # the weaker "near" fallback, not direct bbox overlap), and one such
+        # line alone produced over 150,000 spurious matches on a real
+        # drawing, which then made every later per-association scan
+        # (extension lines, target resolution, topology) run for minutes.
+        # Dimension callouts are always short strings with small boxes, so
+        # restricting to them avoids that blowup at the source.
+        dimension_text_ids = {
+            dimension.text_source_id
+            for dimension in dimensions
+            if dimension.text_source_id is not None
+        }
+        dimension_texts = [text for text in texts if text.text_id in dimension_text_ids]
+
+        spatial_relations = SpatialAssociationEngine(
+            distance_threshold=self.text_geometry_distance_threshold
+        ).associate(dimension_texts, geometries)
+        dimension_associations = self._cap_associations(
+            DimensionGeometryAssociationEngine(
+                distance_threshold=self.text_geometry_distance_threshold
+            ).associate(dimensions, geometries, spatial_relations)
         )
         dimension_links = DimensionTargetResolutionEngine().resolve(
             dimensions, dimension_associations, geometries, spatial_relations
@@ -113,7 +159,9 @@ class DrawingToObjectsPipeline:
         features = GeometryFeatureExtractor().extract_features(
             geometries, texts=texts, dimensions=dimensions
         )
-        text_relations = TextGeometryRelationEngine().relate(texts, geometries)
+        text_relations = TextGeometryRelationEngine(
+            distance_threshold=self.text_geometry_distance_threshold
+        ).relate(texts, geometries)
         traceability = [
             TraceabilityMap(
                 source_pdf=pdf.name,
@@ -184,6 +232,7 @@ class DrawingToObjectsPipeline:
         result.statistics = {
             "geometries": len(geometries),
             "texts": len(texts),
+            "used_ocr": used_ocr,
             "dimensions": len(dimensions),
             "dimension_links_resolved": sum(
                 1 for link in dimension_links if link.target_geometry_id
@@ -271,6 +320,29 @@ class DrawingToObjectsPipeline:
         skipped.ai_suggested_type = suggestion.object_type
         skipped.ai_model = f"{suggestion.provider}:{suggestion.model}"
 
+    def _filter_long_notes(self, texts: list[ExtractedText]) -> list[ExtractedText]:
+        """Drop text lines wider than maximum_label_width (default 80pt).
+
+        A real object label ("SALA DE CONTROL"), equipment tag ("BASE E-01"),
+        or dimension callout ("20 m") is always a short string. A drawing's
+        general notes/legend, by contrast, are full sentences that OCR (or
+        even native PDF text extraction) returns as much wider bounding
+        boxes -- on a real drawing tested against this pipeline, a handful
+        of ~200pt-wide note lines alone produced over 150,000 spurious
+        "intersects" matches each in SpatialAssociationEngine and
+        TextGeometryRelationEngine (bbox overlap there does not depend on
+        any distance_threshold, so tuning that parameter alone cannot fix
+        it), which then made every downstream stage that iterates those
+        matches run for minutes. Filtering the source line out is cheaper
+        and more correct than bounding the resulting relations after the
+        fact, since notes were never going to become a room/dimension label
+        anyway.
+        """
+
+        if self.maximum_label_width <= 0:
+            return texts
+        return [text for text in texts if text.width <= self.maximum_label_width]
+
     @staticmethod
     def _deduplicate_lines(geometries: list[GeometryEntity]) -> list[GeometryEntity]:
         """Collapse duplicate line paths that PDF renderers commonly emit for a
@@ -303,6 +375,67 @@ class DrawingToObjectsPipeline:
             seen.add(key)
             deduplicated.append(geometry)
         return deduplicated
+
+    def _cap_associations(
+        self, associations: list[DimensionAssociation]
+    ) -> list[DimensionAssociation]:
+        """Bound DimensionTargetResolutionEngine's worst case.
+
+        That stage (and the topology analysis after it) does O(geometries)
+        work per association -- necessary for its own correctness, but with
+        thousands of geometries even a few hundred associations is a lot of
+        Python-level work, and the number of "unknown"/proximity-only
+        associations a real drawing produces isn't something this pipeline
+        controls (it also isn't fully deterministic run to run, since OCR's
+        recognized text positions vary slightly). Keeping only the
+        highest-confidence associations, up to max_dimension_associations,
+        makes runtime predictable regardless of how noisy a given sheet is,
+        at the cost of only chasing the associations most likely to be real.
+        """
+
+        if len(associations) <= self.max_dimension_associations:
+            return associations
+        return sorted(associations, key=lambda item: item.confidence, reverse=True)[
+            : self.max_dimension_associations
+        ]
+
+    def _filter_negligible_geometries(
+        self, geometries: list[GeometryEntity]
+    ) -> list[GeometryEntity]:
+        """Drop geometries whose bounding-box diagonal is below
+        minimum_geometry_size (default 3 PDF points).
+
+        Real AutoCAD "plot to PDF" output commonly flattens every letterform
+        into its own tiny vector outline (see ocr_text_extractor.py) instead
+        of keeping real PDF text. On a real drawing tested against this
+        pipeline, that alone produced 62,634 geometries, over 90% of them
+        under 5pt across -- almost entirely former letter strokes and hatch
+        ticks, not engineering content (a wall, dimension line, or fence
+        segment on a properly scaled sheet is always far larger). Left
+        unfiltered, every later stage that compares each dimension/text
+        against every geometry (SpatialAssociationEngine,
+        DimensionGeometryAssociationEngine, and especially
+        DimensionTargetResolutionEngine's per-association extension-line and
+        target scan) becomes O(n) or worse in that noise and can run for
+        many minutes on a single sheet. This filter runs once, right after
+        extraction, so every later stage only ever sees plausible
+        engineering geometry.
+        """
+
+        if self.minimum_geometry_size <= 0:
+            return geometries
+
+        kept: list[GeometryEntity] = []
+        for geometry in geometries:
+            corners = self._bounds_as_coordinates(geometry)
+            if not corners:
+                kept.append(geometry)
+                continue
+            (x0, y0), (x1, y1) = corners[0], corners[-1]
+            diagonal = ((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5
+            if diagonal >= self.minimum_geometry_size:
+                kept.append(geometry)
+        return kept
 
     @staticmethod
     def _bounds_as_coordinates(geometry: GeometryEntity) -> list[list[float]]:

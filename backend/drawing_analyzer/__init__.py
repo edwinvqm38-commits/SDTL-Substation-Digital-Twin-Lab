@@ -23,6 +23,7 @@ from .geometry_features import GeometryFeature, GeometryFeatureExtractor
 from .extension_line_detector import ExtensionLineDetector
 from .metadata_extractor import DrawingMetadataExtractor
 from .measurement_builder import MeasurementBuilder
+from .ocr_text_extractor import OCRTextExtractor
 from .scale_detector import DrawingScale, ScaleDetector, ScaleInformation
 from .spatial_relation import SpatialRelation
 from .semantic_engine import (
@@ -70,6 +71,7 @@ __all__ = [
     "GeometryFeatureExtractor",
     "MeasurementBuilder",
     "NormalizedMeasurement",
+    "OCRTextExtractor",
     "PDFDocumentReader",
     "PDFTextExtractor",
     "SpatialAssociationEngine",
