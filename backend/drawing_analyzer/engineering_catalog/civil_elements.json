@@ -27,7 +27,7 @@
         "geometry": "rectangle",
         "closed": true,
         "dimension_required": true,
-        "text_patterns": ["BASE", "FUNDACION", "CIMIENTO"]
+        "text_patterns": ["BASE", "FUNDACION", "FUNDACIONES", "CIMIENTO", "CIMENTACION", "CIMENTACIONES", "ZAPATA"]
       }
     },
     {
