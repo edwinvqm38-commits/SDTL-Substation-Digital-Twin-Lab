@@ -1,0 +1,11 @@
+{
+  "ElectricalRoom": {
+    "height": {"value": 3.0, "unit": "m"}
+  },
+  "Foundation": {
+    "height": {"value": 1.0, "unit": "m"}
+  },
+  "CableTrench": {
+    "depth": {"value": 0.8, "unit": "m"}
+  }
+}
