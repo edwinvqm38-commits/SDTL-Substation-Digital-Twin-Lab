@@ -190,6 +190,70 @@ input {
   display: none;
 }
 
+.layer-filter-region:empty {
+  display: none;
+}
+
+.layer-filter {
+  padding: 10px 16px 14px;
+  border-bottom: 1px solid #edf0f2;
+}
+
+.layer-filter-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.layer-filter-actions button {
+  padding: 3px 9px;
+  color: #2d3b43;
+  font-size: 11px;
+  background: #eef2f4;
+  border: 1px solid #d5dce0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.layer-filter-actions button:hover {
+  background: #e2e8eb;
+}
+
+.layer-filter-group + .layer-filter-group {
+  margin-top: 8px;
+}
+
+.layer-filter-group h3 {
+  margin: 0 0 4px;
+  color: #50606a;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.layer-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.layer-filter-item span {
+  overflow: hidden;
+  color: #2d3b43;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.layer-filter-item small {
+  margin-left: auto;
+  color: #8a97a0;
+  font-size: 11px;
+}
+
 .tree-view {
   padding: 8px 0 24px;
 }

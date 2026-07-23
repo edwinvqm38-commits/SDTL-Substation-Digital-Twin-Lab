@@ -1,3 +1,4 @@
+import { LayerFilter } from "./layer_filter.js";
 import { MetadataPanel } from "./metadata_panel.js";
 import { ObjectInspector } from "./object_inspector.js";
 import { ObjectLoader } from "./object_loader.js";
@@ -25,10 +26,12 @@ async function bootstrap() {
   const metadataPanel = new MetadataPanel(document.querySelector("#metadata-panel"));
   const inspector = new ObjectInspector(metadataPanel, document.querySelector("#selection-type"));
   const tree = new TreeView(document.querySelector("#tree-view"), catalog);
+  const layerFilter = new LayerFilter(document.querySelector("#layer-filter"), catalog);
 
   const refreshHierarchy = (result) => {
     const objects = loader.listObjects();
     tree.setObjects(objects);
+    layerFilter.setObjects(objects);
     objectCount.textContent = `${objects.length} ${objects.length === 1 ? "objeto" : "objetos"}`;
     sceneManager.frameMeshes(result.meshes ?? []);
     if (objects.length) selection.selectObject(objects[0].id);
