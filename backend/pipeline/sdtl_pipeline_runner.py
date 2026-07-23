@@ -7,6 +7,7 @@ import sys
 
 from .extraction_pipeline import DrawingToObjectsPipeline
 from .generate_3d import ThreeDGenerationStage
+from .historical_catalog import HistoricalCatalog
 from .quantity_takeoff import QuantityTakeoffBuilder
 from .review_queue import ReviewQueue
 
@@ -31,6 +32,7 @@ class SDTLPipelineRunner:
         self.review_queue = ReviewQueue()
         self.generation = ThreeDGenerationStage()
         self.takeoff = QuantityTakeoffBuilder()
+        self.historical_catalog = HistoricalCatalog()
 
     def extract(self, pdf_path: str, output_dir: str) -> Path:
         result = self.extraction.run(pdf_path)
@@ -50,6 +52,8 @@ class SDTLPipelineRunner:
                     "possible_type": item.possible_type,
                     "confidence": item.confidence,
                     "reason": item.reason,
+                    "ai_suggested_type": item.ai_suggested_type,
+                    "ai_model": item.ai_model,
                 }
                 for item in result.skipped
             ],
@@ -65,7 +69,10 @@ class SDTLPipelineRunner:
 
     def approve(self, queue_path: str, object_id: str, reviewer: str) -> None:
         obj = self.review_queue.approve(queue_path, object_id, reviewer)
+        recorded = self.historical_catalog.record(obj)
         print(f"{obj.id} ({obj.type}) aprobado por {reviewer}; estado: {obj.state}")
+        if recorded:
+            print(f"Dimensiones agregadas al historico: {recorded}")
 
     def generate_3d(self, queue_path: str, output_dir: str) -> Path:
         objects = self.review_queue.load(queue_path)

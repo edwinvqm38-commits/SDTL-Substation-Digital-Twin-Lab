@@ -1,6 +1,8 @@
 from .cad_entity_mapper import CADEntityMapper
 from .cad_metadata import CADDocument, CADEntity, CADLayer, CADStatistics
 from .cad_report import CADReportBuilder
+from .dwg_converter import DWGConversionError, DWGConverter
+from .dwg_reader import DWGReader
 from .dxf_reader import DXFReader
 from .layer_analyzer import CADLayerAnalysis, CADLayerAnalyzer, CADProjectLayerReport
 
@@ -14,5 +16,8 @@ __all__ = [
     "CADProjectLayerReport",
     "CADReportBuilder",
     "CADStatistics",
+    "DWGConversionError",
+    "DWGConverter",
+    "DWGReader",
     "DXFReader",
 ]

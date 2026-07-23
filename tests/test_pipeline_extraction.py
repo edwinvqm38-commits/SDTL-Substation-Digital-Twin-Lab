@@ -5,7 +5,24 @@ from pathlib import Path
 import fitz
 import pytest
 
+from backend.drawing_analyzer.semantic_engine import LLMFallbackClassifier
+from backend.pipeline.dimension_resolver import DimensionResolver
 from backend.pipeline.extraction_pipeline import DrawingToObjectsPipeline
+from backend.pipeline.historical_catalog import HistoricalCatalog
+
+
+def _isolated_pipeline(
+    tmp_path: Path, llm_classifier: LLMFallbackClassifier | None = None
+) -> DrawingToObjectsPipeline:
+    """Build a pipeline backed by a throwaway historical catalog so tests
+    never read or write the repo's real data/historical_catalog.sqlite3."""
+
+    resolver = DimensionResolver(
+        historical_catalog=HistoricalCatalog(tmp_path / "history.sqlite3")
+    )
+    return DrawingToObjectsPipeline(
+        dimension_resolver=resolver, llm_classifier=llm_classifier
+    )
 
 
 def _draw_line(page: fitz.Page, start: tuple[float, float], end: tuple[float, float]) -> None:
@@ -59,9 +76,9 @@ def electrical_room_pdf(tmp_path: Path) -> Path:
 
 
 def test_pipeline_creates_electrical_room_proposal_from_pdf(
-    electrical_room_pdf: Path,
+    electrical_room_pdf: Path, tmp_path: Path
 ) -> None:
-    result = DrawingToObjectsPipeline().run(electrical_room_pdf)
+    result = _isolated_pipeline(tmp_path).run(electrical_room_pdf)
 
     assert result.statistics["geometries"] > 0
     assert result.statistics["objects_created"] >= 1
@@ -81,11 +98,47 @@ def test_pipeline_creates_electrical_room_proposal_from_pdf(
 
 
 def test_pipeline_report_lists_skipped_low_confidence_candidates(
-    electrical_room_pdf: Path,
+    electrical_room_pdf: Path, tmp_path: Path
 ) -> None:
-    result = DrawingToObjectsPipeline().run(electrical_room_pdf)
+    result = _isolated_pipeline(tmp_path).run(electrical_room_pdf)
 
     assert result.statistics["candidates"] >= result.statistics["objects_created"]
     assert result.statistics["candidates"] == (
         result.statistics["objects_created"] + result.statistics["objects_skipped"]
     )
+
+
+def test_llm_fallback_annotates_semantic_only_skips(
+    electrical_room_pdf: Path, tmp_path: Path
+) -> None:
+    def _fake_post(url: str, headers: dict, payload: dict) -> dict:
+        return {"choices": [{"message": {"content": "electrical_room"}}]}
+
+    classifier = LLMFallbackClassifier(
+        provider="deepseek", api_key="test-key", http_post=_fake_post
+    )
+
+    result = _isolated_pipeline(tmp_path, llm_classifier=classifier).run(
+        electrical_room_pdf
+    )
+
+    semantic_only_skips = [
+        item for item in result.skipped if item.reason == "failed checks: semantic"
+    ]
+    assert semantic_only_skips
+    assert all(item.ai_suggested_type == "electrical_room" for item in semantic_only_skips)
+    assert all(item.ai_model == "deepseek:deepseek-chat" for item in semantic_only_skips)
+
+
+def test_without_llm_configured_skips_have_no_ai_suggestion(
+    electrical_room_pdf: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    unconfigured = LLMFallbackClassifier(provider="deepseek", api_key=None)
+
+    result = _isolated_pipeline(tmp_path, llm_classifier=unconfigured).run(
+        electrical_room_pdf
+    )
+
+    assert result.skipped
+    assert all(item.ai_suggested_type is None for item in result.skipped)

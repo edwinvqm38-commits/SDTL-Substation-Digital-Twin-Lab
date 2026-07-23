@@ -19,6 +19,10 @@ layer_analysis.json
 semantic_mapping.json
 geometry_report.json
 pipeline_output.json
+pipeline_output/
+
+# Historical catalog (per-deployment runtime data, not source)
+data/historical_catalog.sqlite3
 
 # Temporary
 *.tmp

@@ -10,6 +10,7 @@ from backend.drawing_analyzer import (
     DimensionGeometryAssociationEngine,
     DimensionTargetResolutionEngine,
     DimensionTopologyAnalyzer,
+    EngineeringCandidate,
     GeometryEntity,
     GeometryFeatureExtractor,
     PDFTextExtractor,
@@ -19,10 +20,19 @@ from backend.drawing_analyzer import (
     VectorGeometryExtractor,
 )
 from backend.drawing_analyzer.dimension_topology_analyzer import DimensionTopology
+from backend.drawing_analyzer.semantic_engine import LLMFallbackClassifier
+from backend.drawing_analyzer.semantic_engine.text_geometry_relation import (
+    TextGeometryRelation,
+)
 from backend.object_generation import ObjectValidator, SDTLObjectFactory
 from backend.sdtl_core.entities import CivilObject
 
 from .dimension_resolver import DimensionResolver
+
+# Mirrors backend/sdtl_catalog/civil_objects.json's candidate_type values.
+# Used only to tell the (optional) LLM fallback which labels are valid
+# answers -- it never invents a type outside this catalog.
+_KNOWN_CANDIDATE_TYPES = ["electrical_room", "cable_trench", "foundation", "fence", "road"]
 
 
 @dataclass
@@ -33,6 +43,8 @@ class SkippedCandidate:
     possible_type: str
     confidence: float
     reason: str
+    ai_suggested_type: str | None = None
+    ai_model: str | None = None
 
 
 @dataclass
@@ -52,10 +64,15 @@ class DrawingToObjectsPipeline:
     ReviewQueue) before ThreeDGenerationStage will accept it.
     """
 
-    def __init__(self, dimension_resolver: DimensionResolver | None = None) -> None:
+    def __init__(
+        self,
+        dimension_resolver: DimensionResolver | None = None,
+        llm_classifier: LLMFallbackClassifier | None = None,
+    ) -> None:
         self.dimension_resolver = dimension_resolver or DimensionResolver()
         self.factory = SDTLObjectFactory()
         self.validator = ObjectValidator()
+        self.llm_classifier = llm_classifier or LLMFallbackClassifier()
 
     def run(self, pdf_path: str | Path) -> ExtractionResult:
         pdf = Path(pdf_path)
@@ -110,15 +127,21 @@ class DrawingToObjectsPipeline:
         for candidate in candidates:
             validation = self.validator.validate(candidate)
             if not validation["valid"]:
-                failed = [name for name, ok in validation["checks"].items() if not ok]
-                result.skipped.append(
-                    SkippedCandidate(
-                        candidate_id=candidate.id,
-                        possible_type=candidate.possible_type,
-                        confidence=candidate.confidence,
-                        reason=f"failed checks: {', '.join(failed)}",
-                    )
+                checks = validation["checks"]
+                failed = [name for name, ok in checks.items() if not ok]
+                skipped = SkippedCandidate(
+                    candidate_id=candidate.id,
+                    possible_type=candidate.possible_type,
+                    confidence=candidate.confidence,
+                    reason=f"failed checks: {', '.join(failed)}",
                 )
+                # Only ask the (optional) LLM when geometry/traceability are
+                # sound and the sole problem is that no catalog text pattern
+                # matched -- that is the one failure mode a short label
+                # classification can plausibly help with.
+                if failed == ["semantic"]:
+                    self._attach_llm_suggestion(skipped, candidate, text_relations)
+                result.skipped.append(skipped)
                 continue
 
             proposal = self.factory.create_proposal(candidate)
@@ -147,6 +170,35 @@ class DrawingToObjectsPipeline:
             "objects_skipped": len(result.skipped),
         }
         return result
+
+    def _attach_llm_suggestion(
+        self,
+        skipped: SkippedCandidate,
+        candidate: EngineeringCandidate,
+        text_relations: list[TextGeometryRelation],
+    ) -> None:
+        """Ask the (optional) LLM fallback to classify the text nearest this
+        candidate's geometry, and record its answer for a human to confirm.
+        A no-op whenever no provider is configured (the default)."""
+
+        if not self.llm_classifier.is_configured or not candidate.source_geometry:
+            return
+
+        nearby = [
+            relation
+            for relation in text_relations
+            if relation.geometry_id == candidate.source_geometry[0]
+        ]
+        if not nearby:
+            return
+
+        best_text = max(nearby, key=lambda relation: relation.confidence).text
+        suggestion = self.llm_classifier.classify_label(best_text, _KNOWN_CANDIDATE_TYPES)
+        if suggestion is None:
+            return
+
+        skipped.ai_suggested_type = suggestion.object_type
+        skipped.ai_model = f"{suggestion.provider}:{suggestion.model}"
 
     @staticmethod
     def _deduplicate_lines(geometries: list[GeometryEntity]) -> list[GeometryEntity]:
