@@ -146,6 +146,19 @@ class DrawingToObjectsPipeline:
 
             proposal = self.factory.create_proposal(candidate)
             civil_object = self.factory.create_object(proposal)
+            # Carry the drawing's own text labels (e.g. "SALA ELECTRICA",
+            # "BASE E-01") onto the object so ProjectCrossReferenceEngine can
+            # later match the same real-world element across other plans of
+            # the same project (electrical/civil/architectural) without
+            # needing a shared coordinate system between sheets.
+            civil_object.properties = {
+                **civil_object.properties,
+                "matched_labels": [
+                    item["value"]
+                    for item in candidate.evidence
+                    if item.get("type") == "text_match"
+                ],
+            }
             related_topologies = [
                 topology
                 for topology in topologies

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 
+from .cross_reference import ProjectCrossReferenceEngine
 from .extraction_pipeline import DrawingToObjectsPipeline
 from .generate_3d import ThreeDGenerationStage
 from .historical_catalog import HistoricalCatalog
@@ -20,6 +21,7 @@ class SDTLPipelineRunner:
 
         PDF -> geometries/text/dimensions -> engineering candidates
             -> reviewable SDTL objects (review_queue.json)
+            -> [optional: crossref against sibling plans of the same project]
             -> [human approval]
             -> 3D models (glTF) + quantity takeoff (metrado_report.json)
 
@@ -33,6 +35,7 @@ class SDTLPipelineRunner:
         self.generation = ThreeDGenerationStage()
         self.takeoff = QuantityTakeoffBuilder()
         self.historical_catalog = HistoricalCatalog()
+        self.cross_reference = ProjectCrossReferenceEngine()
 
     def extract(self, pdf_path: str, output_dir: str) -> Path:
         result = self.extraction.run(pdf_path)
@@ -97,6 +100,62 @@ class SDTLPipelineRunner:
         print(f"Manifiesto: {manifest_path}")
         return manifest_path
 
+    def crossref(self, queue_paths: list[str], output_dir: str) -> Path:
+        """Merge review queues extracted from multiple plans of the SAME
+        project (e.g. civil.pdf, electrico.pdf, arquitectonico.pdf) and cross-
+        check them: flag disagreeing measurements between plans, and fill a
+        plan's missing dimension from a sibling plan that measured it
+        directly. Writes one merged review_queue.json plus a report of what
+        was found -- it never approves anything, so the merged queue still
+        goes through the normal `approve` step per object.
+        """
+
+        objects = [obj for path in queue_paths for obj in self.review_queue.load(path)]
+        report = self.cross_reference.run(objects)
+
+        output = Path(output_dir)
+        output.mkdir(parents=True, exist_ok=True)
+        merged_path = self.review_queue.save(objects, output / "review_queue.json")
+
+        report_payload = {
+            "source_queues": list(queue_paths),
+            "groups_matched": report.groups_matched,
+            "conflicts": [
+                {
+                    "object_type": item.object_type,
+                    "label": item.label,
+                    "dimension_name": item.dimension_name,
+                    "values": item.values,
+                    "unit": item.unit,
+                    "relative_difference": item.relative_difference,
+                }
+                for item in report.conflicts
+            ],
+            "enrichments": [
+                {
+                    "object_id": item.object_id,
+                    "object_type": item.object_type,
+                    "label": item.label,
+                    "dimension_name": item.dimension_name,
+                    "value": item.value,
+                    "unit": item.unit,
+                    "borrowed_from_pdf": item.borrowed_from_pdf,
+                }
+                for item in report.enrichments
+            ],
+        }
+        report_path = output / "cross_reference_report.json"
+        report_path.write_text(
+            json.dumps(report_payload, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+
+        print(f"Grupos comparados entre planos: {report.groups_matched}")
+        print(f"Conflictos detectados: {len(report.conflicts)}")
+        print(f"Dimensiones completadas desde otro plano: {len(report.enrichments)}")
+        print(f"Cola combinada: {merged_path}")
+        print(f"Reporte: {report_path}")
+        return report_path
+
     def quantity_takeoff(self, queue_path: str, output_path: str) -> Path:
         objects = self.review_queue.load(queue_path)
         report = self.takeoff.build(objects)
@@ -120,6 +179,12 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     approve_parser.add_argument("object_id")
     approve_parser.add_argument("reviewer")
 
+    crossref_parser = subparsers.add_parser(
+        "crossref", help="Merge and cross-check review queues from sibling plans"
+    )
+    crossref_parser.add_argument("queue_paths", nargs="+")
+    crossref_parser.add_argument("--output-dir", default="pipeline_output/crossref")
+
     generate_parser = subparsers.add_parser("generate3d", help="Approved objects -> glTF")
     generate_parser.add_argument("queue_path")
     generate_parser.add_argument("--output-dir", default="pipeline_output/models")
@@ -139,6 +204,8 @@ if __name__ == "__main__":
         runner.extract(args.pdf_path, args.output_dir)
     elif args.command == "approve":
         runner.approve(args.queue_path, args.object_id, args.reviewer)
+    elif args.command == "crossref":
+        runner.crossref(args.queue_paths, args.output_dir)
     elif args.command == "generate3d":
         runner.generate_3d(args.queue_path, args.output_dir)
     elif args.command == "takeoff":
