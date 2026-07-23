@@ -48,6 +48,14 @@ class SDTLPipelineRunner:
             "pipeline": "SDTL v2.0",
             "source_pdf": result.source_pdf,
             "statistics": result.statistics,
+            "scale": {
+                "declared_scale": result.scale.declared_scale if result.scale else None,
+                "declared_scale_confidence": (
+                    result.scale.declared_scale_confidence if result.scale else None
+                ),
+                "meters_per_pdf_unit": result.scale.meters_per_pdf_unit if result.scale else None,
+                "sample_size": result.scale.sample_size if result.scale else 0,
+            },
             "review_queue": str(queue_path),
             "skipped_candidates": [
                 {

@@ -28,6 +28,7 @@ from backend.object_generation import ObjectValidator, SDTLObjectFactory
 from backend.sdtl_core.entities import CivilObject
 
 from .dimension_resolver import DimensionResolver
+from .scale_analysis import ScaleAnalysis, ScaleAnalyzer
 
 # Mirrors backend/sdtl_catalog/civil_objects.json's candidate_type values.
 # Used only to tell the (optional) LLM fallback which labels are valid
@@ -53,6 +54,7 @@ class ExtractionResult:
     objects: list[CivilObject] = field(default_factory=list)
     skipped: list[SkippedCandidate] = field(default_factory=list)
     statistics: dict[str, int] = field(default_factory=dict)
+    scale: ScaleAnalysis | None = None
 
 
 class DrawingToObjectsPipeline:
@@ -68,11 +70,13 @@ class DrawingToObjectsPipeline:
         self,
         dimension_resolver: DimensionResolver | None = None,
         llm_classifier: LLMFallbackClassifier | None = None,
+        scale_analyzer: ScaleAnalyzer | None = None,
     ) -> None:
         self.dimension_resolver = dimension_resolver or DimensionResolver()
         self.factory = SDTLObjectFactory()
         self.validator = ObjectValidator()
         self.llm_classifier = llm_classifier or LLMFallbackClassifier()
+        self.scale_analyzer = scale_analyzer or ScaleAnalyzer()
 
     def run(self, pdf_path: str | Path) -> ExtractionResult:
         pdf = Path(pdf_path)
@@ -100,6 +104,11 @@ class DrawingToObjectsPipeline:
             for link in dimension_links
             if link.dimension_id in dimensions_by_id
         ]
+
+        geometries_by_id = {geometry.geometry_id: geometry for geometry in geometries}
+        scale = self.scale_analyzer.analyze(
+            texts, dimensions_by_id, topologies, geometries_by_id
+        )
 
         features = GeometryFeatureExtractor().extract_features(
             geometries, texts=texts, dimensions=dimensions
@@ -159,6 +168,7 @@ class DrawingToObjectsPipeline:
                     if item.get("type") == "text_match"
                 ],
             }
+            self._assign_position(civil_object, geometries_by_id, scale)
             related_topologies = [
                 topology
                 for topology in topologies
@@ -182,7 +192,55 @@ class DrawingToObjectsPipeline:
             "objects_created": len(result.objects),
             "objects_skipped": len(result.skipped),
         }
+        result.scale = scale
         return result
+
+    def _assign_position(
+        self,
+        civil_object: CivilObject,
+        geometries_by_id: dict[str, GeometryEntity],
+        scale: ScaleAnalysis,
+    ) -> None:
+        """Place the object at its true relative position on this sheet using
+        the empirical meters-per-PDF-unit ratio (see scale_analysis.py). Left
+        at the geometry_3d default ([0, 0, 0]) when no ratio could be derived
+        (no valid dimension callouts anywhere on the sheet), rather than
+        guessing -- generate_3d.py already requires human approval before
+        using any of this, so an un-positioned object is still safe, just
+        stacked at the origin until a scale can be established.
+
+        Positions are only self-consistent within this one source PDF: each
+        sheet has its own arbitrary drawing origin, so objects extracted
+        from different plans of the same project are not placed in a shared
+        world frame by this step (see cross_reference.py for matching them
+        by label instead).
+        """
+
+        if scale.meters_per_pdf_unit is None:
+            return
+
+        geometry = geometries_by_id.get(civil_object.source_geometry)
+        if geometry is None:
+            return
+
+        center = self._paper_center(geometry)
+        if center is None:
+            return
+
+        x, y = center
+        civil_object.properties = {
+            **civil_object.properties,
+            "position": [x * scale.meters_per_pdf_unit, y * scale.meters_per_pdf_unit, 0.0],
+        }
+
+    def _paper_center(self, geometry: GeometryEntity) -> tuple[float, float] | None:
+        corners = self._bounds_as_coordinates(geometry)
+        if not corners:
+            return None
+        return (
+            sum(corner[0] for corner in corners) / len(corners),
+            sum(corner[1] for corner in corners) / len(corners),
+        )
 
     def _attach_llm_suggestion(
         self,

@@ -96,6 +96,10 @@ def test_pipeline_creates_electrical_room_proposal_from_pdf(
     assert dimensions["height"]["source"] == "default"
     assert room.properties["dimension_defaults_applied"] == ["height"]
 
+    assert result.scale.meters_per_pdf_unit == 0.1
+    assert result.scale.sample_size == 2
+    assert room.properties["position"] == [20.0, 16.0, 0.0]
+
 
 def test_pipeline_report_lists_skipped_low_confidence_candidates(
     electrical_room_pdf: Path, tmp_path: Path
