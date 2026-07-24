@@ -86,6 +86,8 @@ def test_span_generates_a_sagging_ribbon() -> None:
     assert model.metadata["horizontal_span_m"] == pytest.approx(300.0)
     assert model.metadata["sag_m"] == pytest.approx(6.0)
     assert model.metadata["sag_assumed"] is False
+    assert model.metadata["visual_width_m"] == pytest.approx(5.0)
+    assert model.metadata["visual_width_not_to_scale"] is True
     vertices = model.components[0].mesh.vertices
     midpoint_z_values = [v[2] for v in vertices if abs(v[0] - 150.0) < 20]
     # The middle of the span should sag below both attachment heights.
@@ -102,6 +104,32 @@ def test_span_assumes_a_sag_ratio_when_not_given() -> None:
 
     assert model.metadata["sag_assumed"] is True
     assert model.metadata["sag_m"] == pytest.approx(300.0 / 20)
+
+
+def test_visual_width_has_a_floor_on_short_spans() -> None:
+    start = make_tower(id="TWR-001")
+    end = make_tower(id="TWR-002", name="Torre 2")
+    start.properties = {**start.properties, "position": [0.0, 0.0, 0.0]}
+    end.properties = {**end.properties, "position": [10.0, 0.0, 0.0]}
+    towers_by_id = {start.id: start, end.id: end}
+    span = make_span(sag_m=0.2)
+
+    model = ConductorSpanGenerator().generate(span, towers_by_id)
+
+    assert model.metadata["visual_width_m"] == pytest.approx(0.5)
+
+
+def test_visual_width_has_a_ceiling_on_long_spans() -> None:
+    start = make_tower(id="TWR-001")
+    end = make_tower(id="TWR-002", name="Torre 2")
+    start.properties = {**start.properties, "position": [0.0, 0.0, 0.0]}
+    end.properties = {**end.properties, "position": [2000.0, 0.0, 0.0]}
+    towers_by_id = {start.id: start, end.id: end}
+    span = make_span(sag_m=20.0)
+
+    model = ConductorSpanGenerator().generate(span, towers_by_id)
+
+    assert model.metadata["visual_width_m"] == pytest.approx(5.0)
 
 
 def test_span_rejects_unknown_tower_reference() -> None:

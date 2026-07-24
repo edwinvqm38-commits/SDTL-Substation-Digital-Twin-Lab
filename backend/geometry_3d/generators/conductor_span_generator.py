@@ -11,8 +11,17 @@ from ._common import source_traceability, validate_source
 # when the input CSV doesn't give a real, engineered sag value -- flagged in
 # the generated model's metadata rather than presented as measured.
 _ASSUMED_SAG_RATIO = 1 / 20
-_RIBBON_HALF_WIDTH_M = 0.05
 _SEGMENTS = 20
+# The real conductor diameter (a couple of centimeters) is invisible next to
+# a span of hundreds of meters, and this pipeline has no per-conductor-type
+# diameter table to render true-to-scale anyway. The ribbon width is always
+# a visualization exaggeration -- proportional to the span so it stays
+# visible at any zoom level, clamped so it neither disappears on short spans
+# nor overwhelms the towers on long ones -- and is flagged as such in the
+# generated model's metadata rather than presented as measured.
+_VISUAL_WIDTH_RATIO = 1 / 60
+_MIN_VISUAL_WIDTH_M = 0.5
+_MAX_VISUAL_WIDTH_M = 5.0
 # Fraction of tower height where the crossarm (and so the conductor
 # attachment point) sits -- matches TowerGenerator's own crossarm placement.
 _ATTACHMENT_HEIGHT_FRACTION = 0.85
@@ -29,7 +38,10 @@ class ConductorSpanGenerator:
     z(t) = 4*sag*t*(1-t), accurate for the small sag-to-span ratios typical
     of transmission conductors; the conductor is rendered as a flat ribbon
     (not a round tube) since a single perpendicular offset is enough for
-    visualization and avoids computing a full Frenet frame per segment.
+    visualization and avoids computing a full Frenet frame per segment. The
+    ribbon's width is a deliberate visualization exaggeration -- a real
+    conductor's diameter would be invisible at line-span distances -- and is
+    marked "visual_width_not_to_scale" in the model's metadata.
     """
 
     def generate(self, source: Any, towers_by_id: dict[str, Any]) -> Object3D:
@@ -53,8 +65,13 @@ class ConductorSpanGenerator:
         if assumed_sag:
             sag = horizontal_span * _ASSUMED_SAG_RATIO
 
-        nx = -dy / horizontal_span * _RIBBON_HALF_WIDTH_M
-        ny = dx / horizontal_span * _RIBBON_HALF_WIDTH_M
+        visual_width = min(
+            max(horizontal_span * _VISUAL_WIDTH_RATIO, _MIN_VISUAL_WIDTH_M),
+            _MAX_VISUAL_WIDTH_M,
+        )
+        half_width = visual_width / 2
+        nx = -dy / horizontal_span * half_width
+        ny = dx / horizontal_span * half_width
 
         vertices: list[list[float]] = []
         for step in range(_SEGMENTS + 1):
@@ -98,6 +115,8 @@ class ConductorSpanGenerator:
                 "horizontal_span_m": horizontal_span,
                 "sag_m": sag,
                 "sag_assumed": assumed_sag,
+                "visual_width_m": visual_width,
+                "visual_width_not_to_scale": True,
                 "conductors_per_phase": source.conductors_per_phase,
                 "material": material.name,
                 "state": source.state,
