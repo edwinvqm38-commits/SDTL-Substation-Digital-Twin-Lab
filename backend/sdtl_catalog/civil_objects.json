@@ -21,6 +21,30 @@
     {
       "candidate_type": "road",
       "object_type": "Road"
+    },
+    {
+      "candidate_type": "transformer",
+      "object_type": "Transformer"
+    },
+    {
+      "candidate_type": "circuit_breaker",
+      "object_type": "CircuitBreaker"
+    },
+    {
+      "candidate_type": "disconnector",
+      "object_type": "Disconnector"
+    },
+    {
+      "candidate_type": "busbar",
+      "object_type": "Busbar"
+    },
+    {
+      "candidate_type": "insulator_string",
+      "object_type": "InsulatorString"
+    },
+    {
+      "candidate_type": "lightning_arrester",
+      "object_type": "LightningArrester"
     }
   ]
 }

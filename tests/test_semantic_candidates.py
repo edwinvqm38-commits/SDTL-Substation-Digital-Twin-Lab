@@ -202,3 +202,88 @@ def test_analysis_builder_stores_semantic_metadata() -> None:
     assert analysis.extraction_metadata["analyzer_version"] == "1.7"
     assert analysis.extraction_metadata["semantic_candidates_created"] is True
     assert analysis.extraction_metadata["candidate_count"] == 25
+
+
+def test_transformer_candidate_requires_dimension() -> None:
+    geometry = make_rectangle("GEO-TRAFO-001", 6, 4)
+    dimension = DimensionEntity(
+        dimension_id="DIM-TRAFO-001",
+        document_id=DOCUMENT_ID,
+        page_number=1,
+        dimension_type="linear",
+        value=6,
+        unit="m",
+        geometry_reference_id="GEO-TRAFO-001",
+        confidence=0.95,
+    )
+    candidates = candidates_for(
+        geometry,
+        [make_text("TXT-TRAFO-001", "TRANSFORMADOR DE POTENCIA")],
+        [dimension],
+    )
+    candidate = next(item for item in candidates if item.possible_type == "transformer")
+
+    assert candidate.confidence > 0.80
+    assert candidate.metadata["catalog_code"] == "TRANSFORMER"
+
+
+def test_circuit_breaker_candidate() -> None:
+    geometry = make_rectangle("GEO-BRK-001", 3, 2)
+    dimension = DimensionEntity(
+        dimension_id="DIM-BRK-001",
+        document_id=DOCUMENT_ID,
+        page_number=1,
+        dimension_type="linear",
+        value=3,
+        unit="m",
+        geometry_reference_id="GEO-BRK-001",
+        confidence=0.95,
+    )
+    candidates = candidates_for(
+        geometry,
+        [make_text("TXT-BRK-001", "INTERRUPTOR DE POTENCIA")],
+        [dimension],
+    )
+    candidate = next(item for item in candidates if item.possible_type == "circuit_breaker")
+
+    assert candidate.confidence > 0.80
+
+
+def test_disconnector_candidate() -> None:
+    candidates = candidates_for(
+        make_rectangle("GEO-SEC-001", 2, 1.5),
+        [make_text("TXT-SEC-001", "SECCIONADOR")],
+    )
+    candidate = next(item for item in candidates if item.possible_type == "disconnector")
+
+    assert any(evidence["type"] == "text_match" for evidence in candidate.evidence)
+
+
+def test_busbar_candidate() -> None:
+    candidates = candidates_for(
+        make_rectangle("GEO-BUS-001", 15, 0.3),
+        [make_text("TXT-BUS-001", "BARRA PRINCIPAL")],
+    )
+    candidate = next(item for item in candidates if item.possible_type == "busbar")
+
+    assert candidate.metadata["catalog_code"] == "BUSBAR"
+
+
+def test_insulator_string_candidate() -> None:
+    candidates = candidates_for(
+        make_rectangle("GEO-AIS-001", 1, 0.3),
+        [make_text("TXT-AIS-001", "CADENA DE AISLADORES")],
+    )
+    candidate = next(item for item in candidates if item.possible_type == "insulator_string")
+
+    assert any(evidence["type"] == "text_match" for evidence in candidate.evidence)
+
+
+def test_lightning_arrester_candidate() -> None:
+    candidates = candidates_for(
+        make_rectangle("GEO-PARARRAYOS-001", 1, 0.5),
+        [make_text("TXT-PARARRAYOS-001", "PARARRAYOS")],
+    )
+    candidate = next(item for item in candidates if item.possible_type == "lightning_arrester")
+
+    assert any(evidence["type"] == "text_match" for evidence in candidate.evidence)

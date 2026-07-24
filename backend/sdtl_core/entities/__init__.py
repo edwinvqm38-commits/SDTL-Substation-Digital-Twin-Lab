@@ -1,19 +1,31 @@
 from .civil_objects import (
+    Busbar,
     CableTrench,
+    CircuitBreaker,
     CivilObject,
+    Disconnector,
     ElectricalRoom,
     Fence,
     Foundation,
     HumanReview,
+    InsulatorString,
+    LightningArrester,
     Road,
+    Transformer,
 )
 
 __all__ = [
+    "Busbar",
     "CableTrench",
+    "CircuitBreaker",
     "CivilObject",
+    "Disconnector",
     "ElectricalRoom",
     "Fence",
     "Foundation",
     "HumanReview",
+    "InsulatorString",
+    "LightningArrester",
     "Road",
+    "Transformer",
 ]

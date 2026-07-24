@@ -5,12 +5,18 @@ from pathlib import Path
 from typing import TypeAlias
 
 from backend.sdtl_core.entities import (
+    Busbar,
     CableTrench,
+    CircuitBreaker,
     CivilObject,
+    Disconnector,
     ElectricalRoom,
     Fence,
     Foundation,
+    InsulatorString,
+    LightningArrester,
     Road,
+    Transformer,
 )
 
 
@@ -26,6 +32,12 @@ class ObjectMapper:
         "Foundation": Foundation,
         "Fence": Fence,
         "Road": Road,
+        "Transformer": Transformer,
+        "CircuitBreaker": CircuitBreaker,
+        "Disconnector": Disconnector,
+        "Busbar": Busbar,
+        "InsulatorString": InsulatorString,
+        "LightningArrester": LightningArrester,
     }
 
     def __init__(self, catalog_path: str | Path | None = None) -> None:

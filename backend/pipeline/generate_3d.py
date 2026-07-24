@@ -4,10 +4,16 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from backend.geometry_3d import (
+    BusbarGenerator,
     CableTrenchGenerator,
+    CircuitBreakerGenerator,
+    DisconnectorGenerator,
     FoundationGenerator,
     GLTFExporter,
+    InsulatorStringGenerator,
+    LightningArresterGenerator,
     RoomGenerator,
+    TransformerGenerator,
 )
 from backend.sdtl_core.entities import CivilObject
 
@@ -15,6 +21,12 @@ _GENERATORS = {
     "ElectricalRoom": RoomGenerator(),
     "Foundation": FoundationGenerator(),
     "CableTrench": CableTrenchGenerator(),
+    "Transformer": TransformerGenerator,
+    "CircuitBreaker": CircuitBreakerGenerator,
+    "Disconnector": DisconnectorGenerator,
+    "Busbar": BusbarGenerator,
+    "InsulatorString": InsulatorStringGenerator,
+    "LightningArrester": LightningArresterGenerator,
 }
 
 
@@ -35,10 +47,9 @@ class ThreeDGenerationStage:
     """Dispatch approved/active SDTL objects to their geometry_3d generator
     and export the result as glTF.
 
-    Only ElectricalRoom, Foundation, and CableTrench have a generator today
-    (see backend/geometry_3d/generators/); Fence and Road are reported as
-    skipped rather than failing the whole batch, since their generators do
-    not exist yet.
+    Fence and Road are reported as skipped rather than failing the whole
+    batch, since their generators do not exist yet (see
+    backend/geometry_3d/generators/).
     """
 
     def __init__(self, exporter: GLTFExporter | None = None) -> None:

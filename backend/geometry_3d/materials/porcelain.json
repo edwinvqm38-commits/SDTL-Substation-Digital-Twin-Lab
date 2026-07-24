@@ -1,0 +1,11 @@
+{
+  "name": "Porcelain",
+  "density": 2400,
+  "visual": {
+    "color": "#8B8060",
+    "opacity": 1.0
+  },
+  "metadata": {
+    "density_unit": "kg/m3"
+  }
+}

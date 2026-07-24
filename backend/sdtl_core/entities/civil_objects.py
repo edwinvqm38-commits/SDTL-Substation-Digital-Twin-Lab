@@ -113,3 +113,39 @@ class Road(CivilObject):
     """Civil access or internal road represented in an engineering drawing."""
 
     type: Literal["Road"] = "Road"
+
+
+class Transformer(CivilObject):
+    """Power transformer footprint represented in a substation layout drawing."""
+
+    type: Literal["Transformer"] = "Transformer"
+
+
+class CircuitBreaker(CivilObject):
+    """High-voltage circuit breaker footprint in a substation layout drawing."""
+
+    type: Literal["CircuitBreaker"] = "CircuitBreaker"
+
+
+class Disconnector(CivilObject):
+    """Disconnect switch (seccionador) footprint in a substation layout drawing."""
+
+    type: Literal["Disconnector"] = "Disconnector"
+
+
+class Busbar(CivilObject):
+    """Rigid or strung busbar run represented in a substation layout drawing."""
+
+    type: Literal["Busbar"] = "Busbar"
+
+
+class InsulatorString(CivilObject):
+    """Insulator string/support represented in a substation layout drawing."""
+
+    type: Literal["InsulatorString"] = "InsulatorString"
+
+
+class LightningArrester(CivilObject):
+    """Surge/lightning arrester footprint represented in a substation layout drawing."""
+
+    type: Literal["LightningArrester"] = "LightningArrester"

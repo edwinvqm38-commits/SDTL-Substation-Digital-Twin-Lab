@@ -1,5 +1,58 @@
 {
   "catalog": "electrical_elements",
   "version": "1.0",
-  "elements": []
+  "elements": [
+    {
+      "code": "TRANSFORMER",
+      "type": "transformer",
+      "rules": {
+        "geometry": "closed_rectangle",
+        "dimension_required": true,
+        "text_patterns": ["TRANSFORMADOR", "TRAFO", "AUTOTRANSFORMADOR"]
+      }
+    },
+    {
+      "code": "CIRCUIT_BREAKER",
+      "type": "circuit_breaker",
+      "rules": {
+        "geometry": "closed_rectangle",
+        "dimension_required": true,
+        "text_patterns": ["INTERRUPTOR", "INTERRUPTOR DE POTENCIA"]
+      }
+    },
+    {
+      "code": "DISCONNECTOR",
+      "type": "disconnector",
+      "rules": {
+        "geometry": "rectangle",
+        "text_patterns": ["SECCIONADOR", "CUCHILLA SECCIONADORA"]
+      }
+    },
+    {
+      "code": "BUSBAR",
+      "type": "busbar",
+      "rules": {
+        "geometry": "long_rectangle",
+        "aspect_ratio_min": 4,
+        "width_range": [0.02, 1.0],
+        "text_patterns": ["BARRA", "BARRAJE", "BUS"]
+      }
+    },
+    {
+      "code": "INSULATOR_STRING",
+      "type": "insulator_string",
+      "rules": {
+        "geometry": "rectangle",
+        "text_patterns": ["AISLADOR", "CADENA DE AISLADORES"]
+      }
+    },
+    {
+      "code": "LIGHTNING_ARRESTER",
+      "type": "lightning_arrester",
+      "rules": {
+        "geometry": "rectangle",
+        "text_patterns": ["PARARRAYOS", "DESCARGADOR DE SOBRETENSION"]
+      }
+    }
+  ]
 }
