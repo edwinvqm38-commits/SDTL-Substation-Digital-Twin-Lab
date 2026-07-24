@@ -31,6 +31,7 @@ from backend.object_generation import ObjectValidator, SDTLObjectFactory
 from backend.sdtl_core.entities import CivilObject
 
 from .dimension_resolver import DimensionResolver
+from .label_propagation import ConnectedLabelPropagator
 from .scale_analysis import ScaleAnalysis, ScaleAnalyzer
 
 # Mirrors backend/sdtl_catalog/civil_objects.json's candidate_type values.
@@ -79,6 +80,7 @@ class DrawingToObjectsPipeline:
         max_dimension_associations: int = 40,
         text_geometry_distance_threshold: float = 20.0,
         maximum_label_width: float = 80.0,
+        label_propagator: ConnectedLabelPropagator | None = None,
     ) -> None:
         self.dimension_resolver = dimension_resolver or DimensionResolver()
         self.factory = SDTLObjectFactory()
@@ -90,6 +92,7 @@ class DrawingToObjectsPipeline:
         self.max_dimension_associations = max_dimension_associations
         self.text_geometry_distance_threshold = text_geometry_distance_threshold
         self.maximum_label_width = maximum_label_width
+        self.label_propagator = label_propagator or ConnectedLabelPropagator()
 
     def run(self, pdf_path: str | Path) -> ExtractionResult:
         pdf = Path(pdf_path)
@@ -179,6 +182,7 @@ class DrawingToObjectsPipeline:
             topologies=topologies,
             traceability=traceability,
         )
+        self.label_propagator.propagate(candidates, geometries_by_id)
 
         result = ExtractionResult(source_pdf=pdf.name)
         for candidate in candidates:
